@@ -1,0 +1,174 @@
+mysql 
+
+cmd창
+
+@ C:\Users\bitcamp>mysql -u root -p
+@ Enter password: a1234
+
+# mysql> status						현 상태 확인하기
+--------------
+mysql  Ver 14.14 Distrib 5.5.52, for Win64 (x86)
+
+Connection id:          3
+Current database:
+Current user:           root@localhost
+SSL:                    Not in use
+Using delimiter:        ;
+Server version:         5.5.52 MySQL Community Server (GPL)
+Protocol version:       10
+Connection:             localhost via TCP/IP
+Server characterset:    utf8
+Db     characterset:    utf8
+Client characterset:    utf8
+Conn.  characterset:    utf8
+TCP port:               3306
+Uptime:                 1 hour 34 min 7 sec
+
+Threads: 1  Questions: 5  Slow queries: 0  Opens: 33  Flush tables: 1  Open tables: 0  Queries per second avg: 0.000
+
+
+@ mysql> show databases;				db 확인하기
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| test               |
++--------------------+
+4 rows in set (0.00 sec)
+
+@ mysql> create database bitcamp;			db 생성
+Query OK, 1 row affected (0.11 sec)
+
+@ mysql> show databases;				db 생성 확인하기
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| bitcamp            |
+| mysql              |
+| performance_schema |
+| test               |
++--------------------+
+5 rows in set (0.00 sec)
+
+@ mysql> drop database bitcamp;			만든 db 삭제하기
+Query OK, 0 rows affected (0.01 sec)
+
+@ mysql> create database bit901;			bit901 db 만들기
+Query OK, 1 row affected (0.00 sec)
+
+@ mysql> create database bitcamp;			bitcamp db 만들기
+Query OK, 1 row affected (0.00 sec)
+
+@ mysql> use bitcamp;					bitcamp db로 접근
+Database changed
+
+@ mysql> status						현 상태 확인하기
+--------------
+~~~
+Current database:       bitcamp				여기에 현 db 나옴
+~~~
+
+@ mysql> select now() from dual;
++---------------------+
+| now()               |
++---------------------+
+| 2022-04-12 12:02:36 |
++---------------------+
+1 row in set (0.00 sec)
+
+@ mysql> select sysdate() from dual;
++---------------------+
+| sysdate()           |
++---------------------+
+| 2022-04-12 12:03:16 |
++---------------------+
+1 row in set (0.00 sec)
+
+@ mysql> select current_timestamp() from dual;		날짜 시간까지
++---------------------+
+| current_timestamp() |
++---------------------+
+| 2022-04-12 12:03:30 |
++---------------------+
+1 row in set (0.00 sec)
+
+@ mysql> select year(now()) from dual;			년 숫자로
++-------------+
+| year(now()) |
++-------------+
+|        2022 |
++-------------+
+1 row in set (0.00 sec)
+
+@ mysql> select month(now()) from dual;			월 숫자로
++--------------+
+| month(now()) |
++--------------+
+|            4 |
++--------------+
+1 row in set (0.00 sec)
+
+@ mysql> select monthname(now()) from dual;		월 이름으로
++------------------+
+| monthname(now()) |
++------------------+
+| April            |
++------------------+
+1 row in set (0.00 sec)
+
+@ mysql> select dayname(now()) from dual;			요일로
++----------------+
+| dayname(now()) |
++----------------+
+| Tuesday        |
++----------------+
+1 row in set (0.00 sec)
+
+@ mysql> select dayofmonth(now()) from dual;		숫자로
++-------------------+
+| dayofmonth(now()) |
++-------------------+
+|                12 |
++-------------------+
+1 row in set (0.00 sec)
+
+@ mysql> select date_format(now(),'%Y-%m-%d') from dual;	xxxx-xx-xx처럼 출력
++-------------------------------+						소문자y로하면 xx-xx-xx처럼 출력
+| date_format(now(),'%Y-%m-%d') |
++-------------------------------+
+| 2022-04-12                    |
++-------------------------------+
+1 row in set (0.00 sec)
+
+@ mysql> create table test01 (num tinyint auto_increment primary key,	table 데이타 넣기
+    ->       name varchar(20), age smallint,
+    ->      height decimal(5,1),birthday datetime, ipsaday date);			decimal = 소숫점까지 표시
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> desc test01;								table 데이타 확인
++----------+--------------+------+-----+---------+----------------+
+| Field    | Type         | Null | Key | Default | Extra          |
++----------+--------------+------+-----+---------+----------------+
+| num      | tinyint(4)   | NO   | PRI | NULL    | auto_increment |
+| name     | varchar(20)  | YES  |     | NULL    |                |
+| age      | smallint(6)  | YES  |     | NULL    |                |
+| height   | decimal(5,1) | YES  |     | NULL    |                |
+| birthday | datetime     | YES  |     | NULL    |                |
+| ipsaday  | date         | YES  |     | NULL    |                |
++----------+--------------+------+-----+---------+----------------+
+6 rows in set (0.01 sec)
+
+mysql> insert into test01 (name,age,height,birthday,ipsaday) 		value 값 넣기
+	values ('kim',23,167.8,'1989-12-12','2020-10-10');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from test01;							value 값 확인하기
++-----+------+------+--------+---------------------+------------+
+| num | name | age  | height | birthday            | ipsaday    |
++-----+------+------+--------+---------------------+------------+
+|   1 | kim  |   23 |  167.8 | 1989-12-12 00:00:00 | 2020-10-10 |
++-----+------+------+--------+---------------------+------------+
+1 row in set (0.00 sec)

@@ -1,0 +1,105 @@
+-- 테이블수정 : 컬럼 추가하기
+alter table student add score smallint default 10;
+-- birthday 컬럼 삭제
+alter table student drop column birthday;
+-- name을 varchar(30)으로 수정하기
+alter table student modify name varchar(30);
+-- 수정된 구조 확인
+desc student;
+
+-- 컬럼명 수정
+alter table student change hp phone varchar(20);  		// rename 안되고 change A B type; 이렇게 해줘야 --함
+
+-- 오라클의 NVL이 mysql에서는 ifnull
+select num,name,ifnull(phone,'핸드폰 없음') phone from student;
+
+delete from student where name='유재석'
+
+-- 강호동 60점 이미자 80점
+update student set score=80 where name='이미자';
+update student set score=60 where name='강호동';
+
+insert into student(name,phone,score) values ('송혜교','010-1111-2222',100);
+insert into student(name,phone,score) values ('송승헌','010-3333-2222',78);
+insert into student(name,phone,score) values ('김미자','010-5555-2222',89);
+insert into student(name,phone,score) values ('김말자','010-7777-2222',56);
+
+select round(avg(score),1) score from student;
+
+-- 부분적으로 데이타 값을 가져올 때 ex. 3번째 인덱스부터 2개 = 즉, 4번 5번
+select * from student limit 3,2;
+
+-- if문 곁들이기 // ex. if(조건, 참, 거짓)
+select name,phone,score,if(score>=90,'우등생','노력하세요') grade from student;
+
+
+alter table student add gender varchar(20) default '남자';
+-- 여자로 바꿔보기 // ex. name='가나다' or name= ~~ or ~~ or ~~ 이거보다는
+				name in (~~~, ~~~, ~~~, ~~~) 이렇게 in을 쓰는게 더 좋지
+update student set gender='여자' where name in ('송혜교','이미자','김미자','김말자');
+
+
+-- 남여 그룹별로 인원수와 평균점수 구하기
+select gender,count(*) count,round(avg(score),1) score from student group by gender;
+-- 출력할 컬럼 : gender, count, score
+-- 컬럼의 값 : gender -> gender, count -> count(*), score -> round(avg(score),1) score
+-- 데이터 어디서가져와 : from student
+-- 그룹 기준을 뭘로둘꺼야 : group by gender
+
+-- 평균점수보다 더 높은 점수를 받은 사람의 전체 컬럼   ㅇ
+select * from student where score>(select avg(score) from student);
+-- 전체 컬럼이라서 select * 이렇게
+
+===============================================================
+
+-- 문자열 더하기 concat // 오라클은 2개만 됨, mysql은 제한없음
+select concat('Happy','Day','!!') from dual;
+-- 문자열 바꾸기
+select replace('Happy Day','Happy','Nice') from dual;
+-- 해당 문자 위치 찾기. 	// Java에서 indexof랑 같은거임
+select instr('happy','a') from dual;
+
+-- 한글일 때도 1글자당 1로 침
+select left('have a nice day',4) from dual;
+select right('have a nice day',4) from dual;
+select mid('have a nice day',8,4) from dual;
+
+mysql 공부하기 파일 가면 다 있음
+
+======================================================
+join 연습
+
+create table bitclass(
+	idx smallint primary key,
+	class varchar(30),
+	price int,
+	gigan smallint);
+
+create table stu(
+	num smallint auto_increment primary key,
+	name varchar(20),
+	idx smallint,
+	sugangday date,
+	constraint stu_fk_idx foreign key(idx) references bitclass(idx));
+
+insert into bitclass values (100,'Java',110000,10);
+insert into bitclass values (200,'HTML5',90000,8);
+insert into bitclass values (300,'jQuery',130000,12);
+insert into bitclass values (400,'Oracle',180000,20);
+
+insert into stu (name,idx,sugangday) values ('min','400',now());
+insert into stu (name,idx,sugangday) values ('min','400',now());
+insert into stu (name,idx,sugangday) values ('min','400',now());
+insert into stu (name,idx,sugangday) values ('min','400',now());
+
+-- join 1
+select * from bitclass bc,stu where bc.idx=stu.idx;
+
+-- join 2
+select name,class,price,gigan,sugangday from bitclass bc,stu
+where bc.idx=stu.idx;
+					-- join 2 == join 3
+-- join 3
+select name,class,price,gigan,sugangday from bitclass bc
+inner join stu on bc.idx=stu.idx;
+
